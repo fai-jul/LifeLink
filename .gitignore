@@ -1,0 +1,6 @@
+target/
+*.class
+lifelink.db
+.idea/
+*.iml
+.vscode/

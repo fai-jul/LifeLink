@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.BloodBankRequestsController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="&#8592; Dashboard" styleClass="btn-secondary" onAction="#goBack"/>
+            <VBox>
+                <Label text="Emergency Requests" styleClass="topbar-title" />
+                <Label text="Triage queue — critical requests always surface first" styleClass="topbar-date" />
+            </VBox>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox styleClass="card" spacing="14">
+                <VBox styleClass="section-header-row">
+                    <Label text="Active request queue" styleClass="section-heading" />
+                    <Label fx:id="queueSummaryLabel" text="Loading queue..." styleClass="section-sub" />
+                </VBox>
+                <Label fx:id="emptyLabel" text="No active emergency requests right now." styleClass="empty-state-card" maxWidth="Infinity" />
+                <VBox fx:id="requestQueueBox" spacing="8" />
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

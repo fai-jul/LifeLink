@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.StatisticsController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <Button text="Back" styleClass="btn-secondary" onAction="#goBack" />
+            <VBox>
+                <Label text="Statistics" styleClass="topbar-title" />
+                <Label text="Your impact and the wider LifeLink network" styleClass="auth-subtitle" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Open map" styleClass="btn-primary" onAction="#openMap" />
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="20" styleClass="statistics-page">
+                <VBox styleClass="welcome-banner" spacing="6">
+                    <Label text="Your impact, clearly measured." styleClass="banner-title" />
+                    <Label text="Keep your personal donation story separate from the overall blood-bank network." styleClass="banner-copy" />
+                </VBox>
+                <VBox styleClass="stats-section personal-section" spacing="14">
+                    <VBox spacing="3">
+                        <Label text="PERSONAL OVERVIEW" styleClass="section-kicker" />
+                        <Label fx:id="personalTitle" text="Your donation story" styleClass="section-heading" />
+                        <Label text="Your recorded contribution and donor profile." styleClass="section-sub" />
+                    </VBox>
+                    <HBox spacing="14">
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6">
+                            <Label text="DONATIONS" styleClass="card-title" />
+                            <Label fx:id="donationCount" text="0" styleClass="card-metric" />
+                            <Label text="completed donation visits" styleClass="card-metric-sub" />
+                        </VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6">
+                            <Label text="UNITS GIVEN" styleClass="card-title" />
+                            <Label fx:id="unitsGiven" text="0" styleClass="card-metric" />
+                            <Label text="recorded blood units" styleClass="card-metric-sub" />
+                        </VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6">
+                            <Label text="BLOOD TYPE" styleClass="card-title" />
+                            <Label fx:id="personalType" text="-" styleClass="card-metric" />
+                            <Label fx:id="personalStatus" text="No donor profile loaded" styleClass="card-metric-sub" wrapText="true" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+                <VBox styleClass="stats-section network-section" spacing="14">
+                    <VBox spacing="3">
+                        <Label text="NETWORK OVERVIEW" styleClass="section-kicker" />
+                        <Label text="Overall blood-bank network" styleClass="section-heading" />
+                        <Label text="Live donors, requests, facilities, and available inventory." styleClass="section-sub" />
+                    </VBox>
+                    <HBox spacing="14">
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6"><Label text="REGISTERED DONORS" styleClass="card-title" /><Label fx:id="donorCount" text="0" styleClass="card-metric" /><Label text="across LifeLink" styleClass="card-metric-sub" /></VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6"><Label text="AVAILABLE NOW" styleClass="card-title" /><Label fx:id="availableDonorCount" text="0" styleClass="card-metric" /><Label text="visible for matching" styleClass="card-metric-sub" /></VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6"><Label text="ACTIVE REQUESTS" styleClass="card-title" /><Label fx:id="requestCount" text="0" styleClass="card-metric" /><Label text="currently seeking blood" styleClass="card-metric-sub" /></VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6"><Label text="BLOOD BANKS" styleClass="card-title" /><Label fx:id="bankCount" text="0" styleClass="card-metric" /><Label text="connected facilities" styleClass="card-metric-sub" /></VBox>
+                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="6"><Label text="AVAILABLE UNITS" styleClass="card-title" /><Label fx:id="inventoryCount" text="0" styleClass="card-metric" /><Label text="in connected banks" styleClass="card-metric-sub" /></VBox>
+                    </HBox>
+                    <HBox spacing="18">
+                        <VBox styleClass="card chart-card" HBox.hgrow="ALWAYS" spacing="8">
+                            <Label text="Donor blood type mix" styleClass="section-heading" />
+                            <Label text="Registered donors by blood type" styleClass="section-sub" />
+                            <PieChart fx:id="typeChart" legendSide="RIGHT" prefHeight="280" />
+                        </VBox>
+                        <VBox styleClass="card chart-card" HBox.hgrow="ALWAYS" spacing="8">
+                            <Label text="Network pulse" styleClass="section-heading" />
+                            <Label text="A quick view of current supply and demand" styleClass="section-sub" />
+                            <BarChart fx:id="networkChart" legendVisible="false" animated="false" prefHeight="280">
+                                <xAxis><CategoryAxis label="Measure" /></xAxis>
+                                <yAxis><NumberAxis label="Count" forceZeroInRange="true" /></yAxis>
+                            </BarChart>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.NotificationsController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <Button text="Back" styleClass="btn-secondary" onAction="#goBack" />
+            <VBox>
+                <Label text="Notifications" styleClass="topbar-title" />
+                <Label fx:id="notificationSummary" text="Loading notifications..." styleClass="auth-subtitle" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Open map" styleClass="btn-primary" onAction="#openMap" />
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="18">
+                <VBox styleClass="welcome-banner" spacing="6">
+                    <Label text="Stay close to the moments that need you." styleClass="banner-title" />
+                    <Label text="Matches, inventory updates, reminders, and community activity appear here." styleClass="banner-copy" wrapText="true" />
+                </VBox>
+                <VBox styleClass="card" spacing="10">
+                    <Label text="INBOX" styleClass="section-heading" />
+                    <VBox fx:id="notificationList" spacing="10" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

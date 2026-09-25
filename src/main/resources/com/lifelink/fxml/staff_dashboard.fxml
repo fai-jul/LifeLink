@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.StaffDashboardController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <VBox>
+                <Label text="LifeLink Operations" styleClass="topbar-title" />
+                <Label text="Role-based workspace" styleClass="topbar-date" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="roleLabel" styleClass="status-pill, status-eligible" />
+        </HBox>
+    </top>
+    <center>
+        <VBox styleClass="content-area" spacing="18" alignment="TOP_LEFT">
+            <VBox styleClass="card" spacing="10" maxWidth="760">
+                <Label text="Welcome" styleClass="card-title" />
+                <Label fx:id="nameLabel" styleClass="card-metric" />
+                <Label text="Your permissions are assigned by role and enforced before operational actions." styleClass="section-sub" wrapText="true" />
+                <Label fx:id="permissionsLabel" styleClass="timeline-entry" wrapText="true" />
+                <HBox spacing="10">
+                    <Button text="View Activity Log" styleClass="btn-secondary" onAction="#openActivity" />
+                    <Button text="Log Out" styleClass="btn-primary" onAction="#handleLogout" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

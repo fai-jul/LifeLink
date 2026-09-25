@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.RecipientDashboardController">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="230">
+            <Label text="Life" styleClass="sidebar-logo" />
+
+            <HBox styleClass="sidebar-user-row" alignment="CENTER_LEFT" spacing="10">
+                <VBox.margin><Insets top="22" left="12" right="12" /></VBox.margin>
+                <Label fx:id="sidebarAvatarLabel" styleClass="sidebar-avatar" text="R" />
+                <VBox spacing="1">
+                    <Label fx:id="sidebarNameLabel" styleClass="sidebar-user-name" text="Recipient" />
+                    <Label text="RECIPIENT ACCOUNT" styleClass="sidebar-user-role" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="2">
+                <VBox.margin><Insets top="18" /></VBox.margin>
+                <Button styleClass="nav-button, nav-button-active" maxWidth="Infinity" onAction="#showDashboard" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9635;" styleClass="nav-icon" /></graphic>
+                    <text>Dashboard</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openRequests" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#10133;" styleClass="nav-icon" /></graphic>
+                    <text>Create Request</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openRequests" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
+                    <text>Active Requests</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
+                    <text>Nearby Blood Banks</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>
+                    <text>Notifications</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showActivity" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8801;" styleClass="nav-icon" /></graphic>
+                    <text>Activity Log</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showProfile" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9673;" styleClass="nav-icon" /></graphic>
+                    <text>Profile</text>
+                </Button>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Log Out" styleClass="nav-button, nav-button-logout" maxWidth="Infinity" onAction="#handleLogout" />
+        </VBox>
+    </left>
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <VBox>
+                <Label text="Recipient Dashboard" styleClass="topbar-title" />
+                <Label fx:id="topbarDateLabel" styleClass="topbar-date" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER_RIGHT" spacing="1">
+                <Label fx:id="welcomeLabel" styleClass="topbar-welcome" />
+                <Label text="Recipient" styleClass="topbar-date" />
+            </VBox>
+            <Label fx:id="topbarAvatarLabel" styleClass="topbar-avatar" text="R" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="22">
+                <HBox styleClass="card, hero-card" alignment="CENTER_LEFT" spacing="18">
+                    <Label text="&#128167;" styleClass="kpi-badge, kpi-badge-coral" />
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label text="Need blood urgently?" styleClass="section-heading" />
+                        <Label text="Create an emergency request and LifeLink will search for compatible, eligible donors near you." styleClass="muted-text" wrapText="true">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                    </VBox>
+                    <Button text="+ Create Request" styleClass="btn-primary" onAction="#openRequests" />
+                </HBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <VBox styleClass="section-header-row">
+                        <Label text="Active Requests" styleClass="section-heading" />
+                        <Label fx:id="requestSummaryLabel" text="Loading your requests..." styleClass="section-sub" />
+                    </VBox>
+                    <VBox fx:id="activeRequestsBox" spacing="8" />
+                </VBox>
+
+                <VBox styleClass="card" spacing="10">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="&#8982;" styleClass="kpi-badge, kpi-badge-teal" />
+                        <VBox>
+                            <Label text="Nearby Blood Banks / Hospitals" styleClass="section-heading" />
+                            <Label text="Explore nearby donors, blood banks, and active requests on the live network map." styleClass="section-sub" wrapText="true" />
+                        </VBox>
+                    </HBox>
+                    <Button text="Open Nearby Network" styleClass="btn-secondary" onAction="#openMap" />
+                </VBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <Label text="Recent Notifications" styleClass="section-heading" />
+                    <Label fx:id="notificationsEmptyLabel" text="No notifications yet." styleClass="empty-state-card" maxWidth="Infinity" />
+                    <VBox fx:id="notificationsBox" spacing="8" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

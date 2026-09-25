@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.InventoryController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT">
+            <Button text="← Dashboard" styleClass="btn-secondary" onAction="#goBack"/>
+            <Label fx:id="titleLabel" styleClass="topbar-title">
+                <HBox.margin><Insets left="18"/></HBox.margin>
+            </Label>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="18">
+                <VBox styleClass="card" spacing="10">
+                    <Label text="Add / Edit Blood Unit" styleClass="section-heading"/>
+                    <HBox spacing="10">
+                        <ComboBox fx:id="formType" promptText="Blood type" prefWidth="150"/>
+                        <ComboBox fx:id="formComponent" promptText="Component" prefWidth="170"/>
+                        <Spinner fx:id="quantitySpinner" prefWidth="110"/>
+                        <DatePicker fx:id="collectionPicker" promptText="Collection date"/>
+                        <DatePicker fx:id="expiryPicker" promptText="Expiry date"/>
+                        <TextField fx:id="storageField" promptText="Storage location" prefWidth="150"/>
+                        <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+                        <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                    </HBox>
+                    <Label fx:id="errorLabel" styleClass="error-label" managed="false" visible="false"/>
+                </VBox>
+                <VBox styleClass="card" spacing="12">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchField" promptText="Search blood type or status" HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="typeFilter" promptText="All blood types" prefWidth="160"/>
+                        <ComboBox fx:id="statusFilter" promptText="All statuses" prefWidth="160"/>
+                        <Button text="Edit selected" styleClass="btn-secondary" onAction="#handleEdit"/>
+                        <Button text="Remove selected" styleClass="btn-secondary" onAction="#handleRemove"/>
+                    </HBox>
+                    <TableView fx:id="inventoryTable" prefHeight="480">
+                        <columns>
+                            <TableColumn fx:id="typeColumn" text="Blood type" prefWidth="130"/>
+                            <TableColumn fx:id="componentColumn" text="Component" prefWidth="150"/>
+                            <TableColumn fx:id="storageColumn" text="Storage" prefWidth="150"/>
+                            <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="100"/>
+                            <TableColumn fx:id="collectionColumn" text="Collected" prefWidth="160"/>
+                            <TableColumn fx:id="expiryColumn" text="Expires" prefWidth="160"/>
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="140"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

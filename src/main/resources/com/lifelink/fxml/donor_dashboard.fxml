@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.DonorDashboardController">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="230">
+            <Label text="Life" styleClass="sidebar-logo" />
+
+            <HBox styleClass="sidebar-user-row" alignment="CENTER_LEFT" spacing="10">
+                <VBox.margin><Insets top="22" left="12" right="12" /></VBox.margin>
+                <Label fx:id="sidebarAvatarLabel" styleClass="sidebar-avatar" text="D" />
+                <VBox spacing="1">
+                    <Label fx:id="sidebarNameLabel" styleClass="sidebar-user-name" text="Donor" />
+                    <Label text="DONOR ACCOUNT" styleClass="sidebar-user-role" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="2">
+                <VBox.margin><Insets top="18" /></VBox.margin>
+                <Button styleClass="nav-button, nav-button-active" maxWidth="Infinity" onAction="#showDashboard" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9635;" styleClass="nav-icon" /></graphic>
+                    <text>Dashboard</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openRequests" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
+                    <text>Emergency Requests</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openHistory" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#10022;" styleClass="nav-icon" /></graphic>
+                    <text>Donation History</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
+                    <text>Nearby Blood Banks</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openStatistics" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9636;" styleClass="nav-icon" /></graphic>
+                    <text>Statistics</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>
+                    <text>Notifications</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showActivity" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8801;" styleClass="nav-icon" /></graphic>
+                    <text>Activity Log</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showProfile" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9673;" styleClass="nav-icon" /></graphic>
+                    <text>Profile</text>
+                </Button>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Log Out" styleClass="nav-button, nav-button-logout" maxWidth="Infinity" onAction="#handleLogout" />
+        </VBox>
+    </left>
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <VBox>
+                <Label text="Donor Dashboard" styleClass="topbar-title" />
+                <Label fx:id="topbarDateLabel" styleClass="topbar-date" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER_RIGHT" spacing="1">
+                <Label fx:id="welcomeLabel" styleClass="topbar-welcome" />
+                <Label text="Donor" styleClass="topbar-date" />
+            </VBox>
+            <Label fx:id="topbarAvatarLabel" styleClass="topbar-avatar" text="D" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="22">
+                <HBox styleClass="welcome-banner" spacing="18" alignment="CENTER_LEFT">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Every donation is a lifeline." styleClass="banner-title" />
+                        <Label text="Make your availability visible and help a nearby patient find the right match." styleClass="banner-copy" wrapText="true" />
+                    </VBox>
+                    <Button text="Be a Donor" styleClass="btn-primary" onAction="#becomeDonor" />
+                    <Button text="Find a Donor" styleClass="btn-light" onAction="#findDonor" />
+                </HBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="YOUR BLOOD TYPE" styleClass="card-title" />
+                        <Label fx:id="bloodTypeLabel" styleClass="card-metric" />
+                        <Label text="Ready to help when it matters" styleClass="card-metric-sub" />
+                    </VBox>
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="DONATION IMPACT" styleClass="card-title" />
+                        <Label text="3 lives" styleClass="card-metric" />
+                        <Label text="can be helped by one donation" styleClass="card-metric-sub" />
+                    </VBox>
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="AVAILABILITY" styleClass="card-title" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label fx:id="availabilityPill" styleClass="status-pill, status-available" text="AVAILABLE" />
+                            <ToggleButton fx:id="availabilityToggle" text="Update" onAction="#handleAvailabilityToggle" />
+                        </HBox>
+                        <Label fx:id="eligibilityPill" styleClass="status-pill, status-eligible" text="ELIGIBLE" />
+                        <Label fx:id="nextEligibleLabel" styleClass="card-metric-sub" />
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card chart-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="Blood type distribution" styleClass="section-heading" />
+                        <Label text="Registered donors in the LifeLink network" styleClass="section-sub" />
+                        <PieChart fx:id="bloodTypeChart" legendSide="RIGHT" prefHeight="235" />
+                    </VBox>
+                    <VBox styleClass="card chart-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="Monthly donations" styleClass="section-heading" />
+                        <Label text="A steady community makes a stronger safety net" styleClass="section-sub" />
+                        <BarChart fx:id="donationBarChart" legendVisible="false" animated="false" prefHeight="235">
+                            <xAxis><CategoryAxis label="Month" /></xAxis>
+                            <yAxis><NumberAxis label="Donations" forceZeroInRange="true" /></yAxis>
+                        </BarChart>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card chart-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <Label text="Network growth" styleClass="section-heading" />
+                        <Label text="Donors joining the cause over the last six months" styleClass="section-sub" />
+                        <LineChart fx:id="growthLineChart" legendVisible="false" animated="false" prefHeight="235">
+                            <xAxis><CategoryAxis label="Month" /></xAxis>
+                            <yAxis><NumberAxis label="Donors" forceZeroInRange="true" /></yAxis>
+                        </LineChart>
+                    </VBox>
+                    <VBox styleClass="card education-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <ImageView fitWidth="260" fitHeight="110" preserveRatio="false">
+                            <image><Image url="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&amp;fit=crop&amp;w=700&amp;q=80" /></image>
+                        </ImageView>
+                        <Label text="Why give blood?" styleClass="section-heading" />
+                        <Label text="Your donation supports surgeries, cancer care, accident recovery, and families in urgent need." styleClass="section-sub" wrapText="true" />
+                    </VBox>
+                </HBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <Label text="Who can donate to whom?" styleClass="section-heading" />
+                    <Label text="Red-cell compatibility guide. Always follow clinical guidance from a qualified professional." styleClass="section-sub" wrapText="true" />
+                    <GridPane fx:id="compatibilityGrid" hgap="8" vgap="8" />
+                </VBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card food-card" HBox.hgrow="ALWAYS" spacing="8">
+                        <ImageView fitWidth="260" fitHeight="105" preserveRatio="false">
+                            <image><Image url="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&amp;fit=crop&amp;w=700&amp;q=80" /></image>
+                        </ImageView>
+                        <Label text="Eat well for healthy blood" styleClass="section-heading" />
+                        <Label text="Choose iron-rich foods such as leafy greens, beans, lentils, eggs, lean meat, and fortified cereals. Pair plant iron with vitamin C." styleClass="section-sub" wrapText="true" />
+                    </VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="12">
+                        <Label text="Donors in your community" styleClass="section-heading" />
+                        <Label text="Available donors, shown for demonstration" styleClass="section-sub" />
+                        <VBox fx:id="donorListBox" spacing="7" />
+                    </VBox>
+                </HBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <Label text="Previous donors" styleClass="section-heading" />
+                    <Label text="A snapshot of people who have already helped someone through LifeLink." styleClass="section-sub" />
+                    <VBox fx:id="previousDonorsBox" spacing="7" />
+                </VBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <VBox styleClass="section-header-row">
+                        <Label text="Emergency Requests Near You" styleClass="section-heading" />
+                        <Label fx:id="requestSummaryLabel" text="Checking nearby compatibility..." styleClass="section-sub" />
+                    </VBox>
+                    <VBox fx:id="emergencyRequestsBox" spacing="8" />
+                </VBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <Label text="Recent Notifications" styleClass="section-heading" />
+                    <Label fx:id="notificationsEmptyLabel" text="No notifications yet." styleClass="empty-state-card" maxWidth="Infinity" />
+                    <VBox fx:id="notificationsBox" spacing="8" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

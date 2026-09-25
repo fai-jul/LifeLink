@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.BloodBankDashboardController">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="230">
+            <Label text="Life" styleClass="sidebar-logo" />
+
+            <HBox styleClass="sidebar-user-row" alignment="CENTER_LEFT" spacing="10">
+                <VBox.margin><Insets top="22" left="12" right="12" /></VBox.margin>
+                <Label fx:id="sidebarAvatarLabel" styleClass="sidebar-avatar" text="B" />
+                <VBox spacing="1">
+                    <Label fx:id="sidebarNameLabel" styleClass="sidebar-user-name" text="Blood Bank" />
+                    <Label text="BLOOD BANK ACCOUNT" styleClass="sidebar-user-role" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="2">
+                <VBox.margin><Insets top="18" /></VBox.margin>
+                <Button styleClass="nav-button, nav-button-active" maxWidth="Infinity" onAction="#showDashboard" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9635;" styleClass="nav-icon" /></graphic>
+                    <text>Dashboard</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openInventory" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#128167;" styleClass="nav-icon" /></graphic>
+                    <text>Inventory</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openRequests" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
+                    <text>Requests</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
+                    <text>Nearby / Map</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>
+                    <text>Notifications</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showActivity" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#8801;" styleClass="nav-icon" /></graphic>
+                    <text>Activity Log</text>
+                </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showProfile" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#9673;" styleClass="nav-icon" /></graphic>
+                    <text>Profile</text>
+                </Button>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Log Out" styleClass="nav-button, nav-button-logout" maxWidth="Infinity" onAction="#handleLogout" />
+        </VBox>
+    </left>
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <VBox>
+                <Label text="Blood Bank Dashboard" styleClass="topbar-title" />
+                <Label fx:id="topbarDateLabel" styleClass="topbar-date" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER_RIGHT" spacing="1">
+                <Label fx:id="welcomeLabel" styleClass="topbar-welcome" />
+                <Label text="Blood Bank" styleClass="topbar-date" />
+            </VBox>
+            <Label fx:id="topbarAvatarLabel" styleClass="topbar-avatar" text="B" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="22">
+                <HBox spacing="18">
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="&#128167;" styleClass="kpi-badge, kpi-badge-coral" />
+                        <Label text="TOTAL INVENTORY" styleClass="card-title">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="inventoryMetric" text="0 units" styleClass="card-metric" />
+                        <Label text="Manage stock, expiry, and alerts" styleClass="card-metric-sub" />
+                    </VBox>
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="&#9873;" styleClass="kpi-badge, kpi-badge-blue" />
+                        <Label text="ACTIVE REQUESTS" styleClass="card-title">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="requestsMetric" text="0" styleClass="card-metric" />
+                        <Label text="Emergency requests awaiting fulfillment" styleClass="card-metric-sub" wrapText="true" />
+                    </VBox>
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="&#9888;" styleClass="kpi-badge, kpi-badge-amber" />
+                        <Label text="LOW-STOCK ALERTS" styleClass="card-title">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="lowStockMetric" text="0" styleClass="card-metric" />
+                        <Label text="Units below the safety threshold" styleClass="card-metric-sub" />
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="Inventory by Blood Type" styleClass="section-heading" />
+                        <PieChart fx:id="inventoryChart" legendSide="RIGHT" prefHeight="250" />
+                        <Label fx:id="inventoryEmptyLabel" text="No available blood units yet. Open Inventory to add stock." styleClass="empty-state-card" maxWidth="Infinity" wrapText="true" />
+                    </VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="12">
+                        <Label text="Quick Actions" styleClass="section-heading" />
+                        <Button text="+ Add Inventory" styleClass="btn-primary" maxWidth="Infinity" onAction="#openInventory" />
+                        <Button text="Review Requests" styleClass="btn-secondary" maxWidth="Infinity" onAction="#openRequests" />
+                        <Button text="View Nearby Network" styleClass="btn-secondary" maxWidth="Infinity" onAction="#openMap" />
+                    </VBox>
+                </HBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <Label text="Recent Notifications" styleClass="section-heading" />
+                    <Label fx:id="notificationsEmptyLabel" text="No notifications yet." styleClass="empty-state-card" maxWidth="Infinity" />
+                    <VBox fx:id="notificationsBox" spacing="8" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

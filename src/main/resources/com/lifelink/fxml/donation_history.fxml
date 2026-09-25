@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.DonationHistoryController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="&#8592; Dashboard" styleClass="btn-secondary" onAction="#goBack" />
+            <VBox>
+                <Label text="Donation history" styleClass="topbar-title" />
+                <Label text="Your contribution timeline, in one place" styleClass="topbar-date" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="&#8681; Export CSV" styleClass="btn-secondary" onAction="#exportCsv" />
+        </HBox>
+    </top>
+    <center>
+        <VBox styleClass="content-area" spacing="20">
+            <HBox spacing="16">
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <Label text="&#10022;" styleClass="kpi-badge, kpi-badge-coral" />
+                    <Label text="TOTAL DONATIONS" styleClass="card-title">
+                        <VBox.margin><Insets top="6" /></VBox.margin>
+                    </Label>
+                    <Label fx:id="donationCountLabel" text="0" styleClass="card-metric" />
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <Label text="&#128167;" styleClass="kpi-badge, kpi-badge-blue" />
+                    <Label text="UNITS GIVEN" styleClass="card-title">
+                        <VBox.margin><Insets top="6" /></VBox.margin>
+                    </Label>
+                    <Label fx:id="unitsLabel" text="0" styleClass="card-metric" />
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <Label text="&#10084;" styleClass="kpi-badge, kpi-badge-teal" />
+                    <Label text="BLOOD TYPE" styleClass="card-title">
+                        <VBox.margin><Insets top="6" /></VBox.margin>
+                    </Label>
+                    <Label fx:id="bloodTypeLabel" styleClass="card-metric" />
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <Label text="&#128197;" styleClass="kpi-badge, kpi-badge-amber" />
+                    <Label text="NEXT ELIGIBLE" styleClass="card-title">
+                        <VBox.margin><Insets top="6" /></VBox.margin>
+                    </Label>
+                    <Label fx:id="nextEligibleLabel" text="-" styleClass="card-metric" style="-fx-font-size: 16px;" />
+                </VBox>
+            </HBox>
+            <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Donation timeline" styleClass="section-heading" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <DatePicker fx:id="datePicker" promptText="Donation date" />
+                    <Spinner fx:id="quantitySpinner" prefWidth="90">
+                        <HBox.margin><Insets left="8" /></HBox.margin>
+                    </Spinner>
+                    <Button text="Record donation" styleClass="btn-primary" onAction="#recordDonation">
+                        <HBox.margin><Insets left="8" /></HBox.margin>
+                    </Button>
+                </HBox>
+                <Label fx:id="emptyLabel" text="No donations recorded yet. Add your first donation above." styleClass="empty-state-card" maxWidth="Infinity" />
+                <VBox fx:id="donationListBox" spacing="8" VBox.vgrow="ALWAYS" />
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

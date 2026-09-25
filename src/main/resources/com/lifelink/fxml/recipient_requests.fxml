@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.RecipientRequestsController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT">
+            <Button text="← Dashboard" styleClass="btn-secondary" onAction="#goBack"/>
+            <Label text="Emergency Blood Requests" styleClass="topbar-title">
+                <HBox.margin><Insets left="18"/></HBox.margin>
+            </Label>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="18">
+                <VBox styleClass="card" spacing="10">
+                    <Label text="Create Emergency Request" styleClass="section-heading"/>
+                    <HBox spacing="10">
+                        <ComboBox fx:id="bloodTypeCombo" promptText="Blood type" prefWidth="140"/>
+                        <Spinner fx:id="quantitySpinner" prefWidth="100"/>
+                        <ComboBox fx:id="priorityCombo" prefWidth="130"/>
+                        <TextField fx:id="locationField" promptText="Location" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <TextField fx:id="latitudeField" promptText="Latitude (optional)" />
+                        <TextField fx:id="longitudeField" promptText="Longitude (optional)" />
+                        <Button text="Create &amp; Find Donors" styleClass="btn-primary" onAction="#handleCreate"/>
+                    </HBox>
+                    <Label fx:id="errorLabel" styleClass="error-label" managed="false" visible="false"/>
+                </VBox>
+                <HBox spacing="18">
+                    <VBox styleClass="card" spacing="10" HBox.hgrow="ALWAYS">
+                        <Label text="Your Requests" styleClass="section-heading"/>
+                        <ListView fx:id="requestList" prefHeight="420"/>
+                        <Button text="Cancel selected request" styleClass="btn-secondary" onAction="#handleCancel"/>
+                    </VBox>
+                    <VBox styleClass="card" spacing="10" prefWidth="420">
+                        <Label text="Status Timeline" styleClass="section-heading"/>
+                        <VBox fx:id="timelineBox" spacing="8"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

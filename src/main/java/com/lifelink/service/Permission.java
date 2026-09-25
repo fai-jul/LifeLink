@@ -1,0 +1,13 @@
+package com.lifelink.service;
+
+public enum Permission {
+    MANAGE_DONORS,
+    SCREEN_DONATIONS,
+    MANAGE_INVENTORY,
+    PERFORM_CROSSMATCH,
+    MANAGE_REQUESTS,
+    DISPATCH_TRANSFERS,
+    VIEW_REPORTS,
+    VIEW_AUDIT_LOG,
+    MANAGE_USERS
+}

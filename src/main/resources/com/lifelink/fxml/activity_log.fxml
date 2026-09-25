@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.ActivityLogController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT">
+            <Button text="← Dashboard" styleClass="btn-secondary" onAction="#goBack"/>
+            <Label fx:id="titleLabel" styleClass="topbar-title">
+                <HBox.margin><Insets left="18"/></HBox.margin>
+            </Label>
+        </HBox>
+    </top>
+    <center>
+        <VBox styleClass="content-area" spacing="14">
+            <Label text="Everything you've done in LifeLink" styleClass="muted-text"/>
+            <TableView fx:id="logTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="actionColumn" text="Action" prefWidth="210"/>
+                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="600"/>
+                    <TableColumn fx:id="timestampColumn" text="Time" prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

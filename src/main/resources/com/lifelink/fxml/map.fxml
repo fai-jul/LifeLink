@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.MapController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <Button text="Back" styleClass="btn-secondary" onAction="#goBack" />
+            <VBox>
+                <Label text="Nearby network" styleClass="topbar-title" />
+                <Label text="Donors, blood banks, and active requests" styleClass="auth-subtitle" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Notifications" styleClass="btn-secondary" onAction="#openNotifications" />
+            <Button text="Statistics" styleClass="btn-secondary" onAction="#openStatistics" />
+            <Button text="Prototype map" styleClass="btn-primary" />
+        </HBox>
+    </top>
+    <center>
+        <HBox styleClass="content-area map-page" spacing="18">
+            <VBox HBox.hgrow="ALWAYS" spacing="10">
+                <VBox styleClass="page-heading" spacing="4">
+                    <Label text="Live network map" styleClass="section-heading" />
+                    <Label text="Select a marker to see who needs blood and who is ready to donate." styleClass="muted-text" />
+                </VBox>
+                <StackPane fx:id="mapViewport" VBox.vgrow="ALWAYS" minHeight="500" styleClass="map-shell">
+                    <HBox styleClass="map-controls" alignment="CENTER" spacing="4" StackPane.alignment="TOP_RIGHT">
+                        <Button text="−" styleClass="map-control" onAction="#zoomOut" />
+                        <Label fx:id="zoomLabel" text="100%" styleClass="map-zoom-label" />
+                        <Button text="+" styleClass="map-control" onAction="#zoomIn" />
+                        <Button text="Reset" styleClass="map-reset" onAction="#resetMap" />
+                    </HBox>
+                </StackPane>
+            </VBox>
+            <VBox prefWidth="300" spacing="12" styleClass="map-sidebar">
+                <VBox styleClass="card" spacing="8">
+                    <Label text="NETWORK STATUS" styleClass="card-title" />
+                    <Label fx:id="networkSummary" text="Loading locations..." styleClass="card-metric-sub" wrapText="true" />
+                </VBox>
+                <VBox styleClass="card" spacing="6">
+                    <Label text="SELECTED LOCATION" styleClass="card-title" />
+                    <Label fx:id="selectedMarkerLabel" text="Select a map marker for details." styleClass="muted-text" wrapText="true" />
+                </VBox>
+                <VBox fx:id="markerList" styleClass="card" spacing="10" VBox.vgrow="ALWAYS" />
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

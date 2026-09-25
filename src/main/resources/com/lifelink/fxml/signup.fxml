@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane fitToWidth="true" styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.SignupController">
+    <StackPane styleClass="app-background">
+        <VBox alignment="TOP_CENTER" maxWidth="520" styleClass="auth-card">
+            <padding><Insets top="10" bottom="30" /></padding>
+
+            <VBox spacing="4">
+                <Label text="Create your LifeLink account" styleClass="auth-title" wrapText="true"/>
+                <Label text="Choose how you'll use LifeLink." styleClass="auth-subtitle" />
+            </VBox>
+
+            <HBox fx:id="roleToggleBox" spacing="10" alignment="CENTER" styleClass="role-toggle">
+                <VBox.margin><Insets top="18" bottom="8" /></VBox.margin>
+                <ToggleButton fx:id="donorToggle" text="Donor" selected="true" />
+                <ToggleButton fx:id="recipientToggle" text="Recipient" />
+                <ToggleButton fx:id="bankToggle" text="Blood Bank" />
+            </HBox>
+
+            <GridPane hgap="14" vgap="6">
+                <VBox.margin><Insets top="10" /></VBox.margin>
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+
+                <Label text="FULL NAME / ORGANIZATION NAME" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label text="EMAIL" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <TextField fx:id="nameField" promptText="Full name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="emailField" promptText="you@example.com" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="PASSWORD" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <GridPane.margin><Insets top="12" /></GridPane.margin>
+                </Label>
+                <Label text="PHONE" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <GridPane.margin><Insets top="12" /></GridPane.margin>
+                </Label>
+
+                <PasswordField fx:id="passwordField" promptText="At least 6 characters" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="phoneField" promptText="e.g. +880 1XXXXXXXXX" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="LOCATION / CITY" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2">
+                    <GridPane.margin><Insets top="12" /></GridPane.margin>
+                </Label>
+                <TextField fx:id="locationField" promptText="e.g. Khulna, Bangladesh" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" />
+            </GridPane>
+
+            <!-- Donor-only fields -->
+            <VBox fx:id="donorFieldsBox" spacing="6">
+                <VBox.margin><Insets top="16" /></VBox.margin>
+                <Label text="DONOR DETAILS" styleClass="field-label" />
+                <GridPane hgap="14" vgap="6">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="34" />
+                        <ColumnConstraints percentWidth="33" />
+                        <ColumnConstraints percentWidth="33" />
+                    </columnConstraints>
+                    <ComboBox fx:id="bloodTypeCombo" promptText="Blood Type" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="ageField" promptText="Age" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="weightField" promptText="Weight (kg)" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                </GridPane>
+            </VBox>
+
+            <!-- Blood bank-only fields -->
+            <VBox fx:id="bankFieldsBox" spacing="6" managed="false" visible="false">
+                <VBox.margin><Insets top="16" /></VBox.margin>
+                <Label text="BLOOD BANK / HOSPITAL ADDRESS" styleClass="field-label" />
+                <TextField fx:id="addressField" promptText="Full street address" />
+            </VBox>
+
+            <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" managed="false" visible="false">
+                <VBox.margin><Insets top="14" /></VBox.margin>
+            </Label>
+
+            <Button text="Create Account" styleClass="btn-primary" maxWidth="Infinity" onAction="#handleSignup">
+                <VBox.margin><Insets top="22" /></VBox.margin>
+            </Button>
+
+            <HBox alignment="CENTER" spacing="4">
+                <VBox.margin><Insets top="16" /></VBox.margin>
+                <Label text="Already have an account?" styleClass="auth-subtitle" />
+                <Button text="Log In" styleClass="link-button" onAction="#goToLogin" />
+            </HBox>
+        </VBox>
+    </StackPane>
+</ScrollPane>

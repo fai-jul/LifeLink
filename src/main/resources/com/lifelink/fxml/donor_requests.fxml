@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.DonorRequestsController">
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" styleClass="btn-secondary" onAction="#goBack" />
+            <VBox>
+                <Label text="Emergency requests" styleClass="topbar-title" />
+                <Label text="Compatible people currently waiting for help" styleClass="auth-subtitle" />
+            </VBox>
+        </HBox>
+    </top>
+    <center>
+        <VBox styleClass="content-area" spacing="16">
+            <HBox styleClass="card" spacing="16" alignment="CENTER_LEFT">
+                <Label text="MATCHED FOR YOU" styleClass="card-title" />
+                <Label fx:id="summaryLabel" text="Loading..." styleClass="section-heading" />
+            </HBox>
+            <VBox fx:id="requestBox" spacing="10" />
+        </VBox>
+    </center>
+</BorderPane>
