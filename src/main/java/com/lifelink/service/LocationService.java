@@ -1,7 +1,7 @@
 package com.lifelink.service;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,12 +14,14 @@ import java.time.Duration;
 import java.util.Optional;
 
 /** Resolves human-readable locations without making location data mandatory. */
-public class LocationService {
+public class LocationService implements LocationProvider {
 
     private final HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(4))
             .build();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public Optional<Coordinates> geocode(String location) {
         if (location == null || location.isBlank()) return Optional.empty();
         String query = URLEncoder.encode(location.trim(), StandardCharsets.UTF_8);
@@ -32,10 +34,13 @@ public class LocationService {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) return Optional.empty();
-            JSONArray results = new JSONArray(response.body());
-            if (results.isEmpty()) return Optional.empty();
-            JSONObject first = results.getJSONObject(0);
-            return Optional.of(new Coordinates(first.getDouble("lat"), first.getDouble("lon")));
+            JsonNode results = objectMapper.readTree(response.body());
+            if (!results.isArray() || results.isEmpty()) return Optional.empty();
+            JsonNode first = results.get(0);
+            JsonNode latitude = first.get("lat");
+            JsonNode longitude = first.get("lon");
+            if (latitude == null || longitude == null) return Optional.empty();
+            return Optional.of(new Coordinates(latitude.asDouble(), longitude.asDouble()));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return Optional.empty();

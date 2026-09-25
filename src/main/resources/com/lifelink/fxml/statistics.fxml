@@ -14,7 +14,6 @@
                 <Label text="Your impact and the wider LifeLink network" styleClass="auth-subtitle" />
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Open map" styleClass="btn-primary" onAction="#openMap" />
         </HBox>
     </top>
     <center>

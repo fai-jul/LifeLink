@@ -34,10 +34,6 @@
                     <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
                     <text>Active Requests</text>
                 </Button>
-                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
-                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
-                    <text>Nearby Blood Banks</text>
-                </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>
                     <text>Notifications</text>
@@ -95,13 +91,24 @@
 
                 <VBox styleClass="card" spacing="10">
                     <HBox spacing="12" alignment="CENTER_LEFT">
-                        <Label text="&#8982;" styleClass="kpi-badge, kpi-badge-teal" />
+                        <Label text="&#8644;" styleClass="kpi-badge, kpi-badge-teal" />
                         <VBox>
-                            <Label text="Nearby Blood Banks / Hospitals" styleClass="section-heading" />
-                            <Label text="Explore nearby donors, blood banks, and active requests on the live network map." styleClass="section-sub" wrapText="true" />
+                            <Label text="Project Data Sources" styleClass="section-heading" />
+                            <Label text="LifeLink collects the information needed for safe donor matching from its connected project records." styleClass="section-sub" wrapText="true" />
                         </VBox>
                     </HBox>
-                    <Button text="Open Nearby Network" styleClass="btn-secondary" onAction="#openMap" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="DONORS" styleClass="list-row-tag, tag-match" />
+                        <Label text="Availability, blood type, and eligibility" styleClass="section-sub" />
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="BANKS" styleClass="list-row-tag, tag-inventory" />
+                        <Label text="Inventory levels and blood-unit status" styleClass="section-sub" />
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="REQUESTS" styleClass="list-row-tag, tag-emergency" />
+                        <Label text="Urgency, compatibility, and request status" styleClass="section-sub" />
+                    </HBox>
                 </VBox>
 
                 <VBox styleClass="card" spacing="12">

@@ -35,10 +35,6 @@
                     <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
                     <text>Requests</text>
                 </Button>
-                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
-                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
-                    <text>Nearby / Map</text>
-                </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>
                     <text>Notifications</text>
@@ -112,7 +108,6 @@
                         <Label text="Quick Actions" styleClass="section-heading" />
                         <Button text="+ Add Inventory" styleClass="btn-primary" maxWidth="Infinity" onAction="#openInventory" />
                         <Button text="Review Requests" styleClass="btn-secondary" maxWidth="Infinity" onAction="#openRequests" />
-                        <Button text="View Nearby Network" styleClass="btn-secondary" maxWidth="Infinity" onAction="#openMap" />
                     </VBox>
                 </HBox>
 

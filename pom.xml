@@ -36,11 +36,11 @@
             <version>3.45.1.0</version>
         </dependency>
 
-        <!-- JSON parsing (used later for the Location/API feature) -->
+        <!-- Jackson JSON parsing for external project data -->
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20240303</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
         </dependency>
     </dependencies>
 

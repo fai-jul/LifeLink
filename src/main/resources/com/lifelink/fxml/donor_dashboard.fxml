@@ -36,10 +36,6 @@
                     <graphic><Label text="&#10022;" styleClass="nav-icon" /></graphic>
                     <text>Donation History</text>
                 </Button>
-                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
-                    <graphic><Label text="&#8982;" styleClass="nav-icon" /></graphic>
-                    <text>Nearby Blood Banks</text>
-                </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openStatistics" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#9636;" styleClass="nav-icon" /></graphic>
                     <text>Statistics</text>
@@ -86,7 +82,7 @@
                         <Label text="Make your availability visible and help a nearby patient find the right match." styleClass="banner-copy" wrapText="true" />
                     </VBox>
                     <Button text="Be a Donor" styleClass="btn-primary" onAction="#becomeDonor" />
-                    <Button text="Find a Donor" styleClass="btn-light" onAction="#findDonor" />
+                    <Button text="View Requests" styleClass="btn-light" onAction="#openRequests" />
                 </HBox>
 
                 <HBox spacing="18">
