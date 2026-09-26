@@ -35,6 +35,10 @@
                     <graphic><Label text="&#9873;" styleClass="nav-icon" /></graphic>
                     <text>Requests</text>
                 </Button>
+                <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openRecords" contentDisplay="LEFT" graphicTextGap="10">
+                    <graphic><Label text="&#128196;" styleClass="nav-icon" /></graphic>
+                    <text>Records</text>
+                </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#9678;" styleClass="nav-icon" /></graphic>
                     <text>Nearby Network</text>

@@ -163,6 +163,11 @@ public class BloodBankDashboardController {
     }
 
     @FXML
+    public void openRecords() {
+        SceneManager.switchTo("bloodbank_records.fxml", "Blood Bank Records");
+    }
+
+    @FXML
     public void showActivity() {
         SceneManager.switchTo("activity_log.fxml", "Activity Log");
     }

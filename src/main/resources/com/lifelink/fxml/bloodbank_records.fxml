@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="app-background" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.lifelink.controller.BloodBankRecordsController">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
+            <Button text="Back" onAction="#goBack" styleClass="btn-secondary" />
+            <VBox>
+                <Label text="Blood Bank Records" styleClass="topbar-title" />
+                <Label text="External API sync and local record tracking" styleClass="topbar-date" />
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area">
+            <VBox spacing="18">
+                <VBox styleClass="card" spacing="12">
+                    <Label text="API Sync" styleClass="section-heading" />
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="apiUrlField" promptText="http://localhost:8080/api" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                        <Button text="Sync records" onAction="#handleSync" styleClass="btn-primary" />
+                    </HBox>
+                    <Label fx:id="syncStatusLabel" text="No synced records yet." styleClass="muted-text" wrapText="true" />
+                </VBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="Tracked Donors" styleClass="section-heading" />
+                        <TableView fx:id="donorTable" prefHeight="260" maxWidth="Infinity">
+                            <columns>
+                                <TableColumn text="Name" fx:id="donorNameColumn" />
+                                <TableColumn text="Blood Type" fx:id="donorBloodTypeColumn" />
+                                <TableColumn text="Location" fx:id="donorLocationColumn" />
+                                <TableColumn text="Status" fx:id="donorStatusColumn" />
+                                <TableColumn text="Phone" fx:id="donorPhoneColumn" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="18">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="Tracked Patients" styleClass="section-heading" />
+                        <TableView fx:id="patientTable" prefHeight="260" maxWidth="Infinity">
+                            <columns>
+                                <TableColumn text="Name" fx:id="patientNameColumn" />
+                                <TableColumn text="Blood Type" fx:id="patientBloodTypeColumn" />
+                                <TableColumn text="Location" fx:id="patientLocationColumn" />
+                                <TableColumn text="Status" fx:id="patientStatusColumn" />
+                                <TableColumn text="Phone" fx:id="patientPhoneColumn" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

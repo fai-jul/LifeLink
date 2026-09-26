@@ -1,8 +1,10 @@
 package com.lifelink.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lifelink.db.BloodBankTrackingRepository;
 import com.lifelink.model.BloodBankDonorRecord;
 import com.lifelink.model.BloodBankPatientRecord;
@@ -14,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ApiClientService {
@@ -22,7 +25,11 @@ public class ApiClientService {
             .connectTimeout(Duration.ofSeconds(8))
             .build();
     private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            .registerModule(new JavaTimeModule())
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+            .findAndRegisterModules();
     private final BloodBankTrackingRepository trackingRepository = new BloodBankTrackingRepository();
 
     public String getConfiguredBaseUrl() {
@@ -32,14 +39,12 @@ public class ApiClientService {
 
     public List<BloodBankDonorRecord> fetchDonors(String apiHost) {
         String url = normalizeApiBase(apiHost) + "/donors";
-        List<BloodBankDonorRecord> donors = fetchList(url, new TypeReference<>() {});
-        return donors == null ? new ArrayList<>() : donors;
+        return fetchList(url, BloodBankDonorRecord.class);
     }
 
     public List<BloodBankPatientRecord> fetchPatients(String apiHost) {
         String url = normalizeApiBase(apiHost) + "/patients";
-        List<BloodBankPatientRecord> patients = fetchList(url, new TypeReference<>() {});
-        return patients == null ? new ArrayList<>() : patients;
+        return fetchList(url, BloodBankPatientRecord.class);
     }
 
     public SyncResult syncBloodBankData(int bloodBankId, String apiHost) {
@@ -59,7 +64,7 @@ public class ApiClientService {
         return new SyncResult(donors.size(), patients.size());
     }
 
-    private <T> T fetchList(String url, TypeReference<T> typeReference) {
+    private <T> List<T> fetchList(String url, Class<T> elementType) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .timeout(Duration.ofSeconds(10))
@@ -70,12 +75,25 @@ public class ApiClientService {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                return null;
+                return new ArrayList<>();
             }
-            return objectMapper.readValue(response.body(), typeReference);
+
+            JsonNode rootNode = objectMapper.readTree(response.body());
+            JsonNode payloadNode = rootNode.has("data") ? rootNode.get("data") : rootNode;
+            if (payloadNode == null || payloadNode.isNull()) {
+                return new ArrayList<>();
+            }
+            if (payloadNode.isArray()) {
+                return objectMapper.readerForListOf(elementType).readValue(payloadNode);
+            }
+            if (payloadNode.isObject()) {
+                T item = objectMapper.treeToValue(payloadNode, elementType);
+                return item == null ? new ArrayList<>() : Collections.singletonList(item);
+            }
+            return new ArrayList<>();
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
-            return null;
+            return new ArrayList<>();
         }
     }
 
