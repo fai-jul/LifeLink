@@ -45,18 +45,10 @@ public class MapController {
         mapLayer.getStyleClass().add("map-layer");
         mapLayer.setMinSize(0, 0);
         mapLayer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        // BUG FIX: mapLayer was a *managed* child of the StackPane. A StackPane
-        // resizes/repositions every managed child itself on each automatic
-        // layout pass, which fights with the manual resizeRelocate() calls in
-        // renderMap() below and can leave the layer at a stale/zero size (it
-        // renders once at 0x0 before the first real layout pass runs, and
-        // depending on layout timing may never get corrected afterwards).
-        // Marking it unmanaged means only OUR code controls its size/position,
-        // so the manual layout in renderMap() is authoritative and reliable.
-        mapLayer.setManaged(false);
-
         mapViewport.getChildren().add(0, mapLayer);
+
+        mapLayer.prefWidthProperty().bind(mapViewport.widthProperty());
+        mapLayer.prefHeightProperty().bind(mapViewport.heightProperty());
 
         // BUG FIX: StackPane (and JavaFX Regions in general) do NOT clip their
         // children to their own bounds. When zoom > 100% scales mapLayer up,
@@ -82,6 +74,7 @@ public class MapController {
         }
         mapViewport.widthProperty().addListener((obs, oldValue, newValue) -> renderMap());
         mapViewport.heightProperty().addListener((obs, oldValue, newValue) -> renderMap());
+        mapViewport.layoutBoundsProperty().addListener((obs, oldValue, newValue) -> renderMap());
 
         // BUG FIX: at initialize() time the scene hasn't been laid out yet, so
         // mapViewport.getWidth()/getHeight() are still 0 and this first call
@@ -170,8 +163,6 @@ public class MapController {
             // drawing a degenerate 0x0 frame.
             return;
         }
-        mapLayer.setPrefSize(width, height);
-        mapLayer.resizeRelocate(0, 0, width, height);
         mapLayer.getChildren().clear();
 
         Label title = new Label("NETWORK MAP — PROTOTYPE CITY VIEW");
