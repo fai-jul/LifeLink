@@ -76,6 +76,7 @@ using the main LifeLink system for donors, requests, and inventory.
 - Notifications generated for emergency requests, donor matches, inventory, and expiry events
 - Full activity log screens for every account role
 - Nearby network screen with saved-coordinate markers in an offline prototype map
+- Blood Network directory with searchable donors, recipients, blood banks, and active requests
 - Nominatim location lookup with timeout-safe offline fallback
 - Real blood-bank network statistics, donor blood-type chart, and live summary counters
 - Confirmation dialogs for request cancellation and other critical actions

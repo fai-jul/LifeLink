@@ -11,7 +11,7 @@
                 <Label fx:id="notificationSummary" text="Loading notifications..." styleClass="auth-subtitle" />
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Nearby Network" styleClass="btn-primary" onAction="#openMap" />
+            <Button text="Blood Network" styleClass="btn-primary" onAction="#openMap" />
         </HBox>
     </top>
     <center>

@@ -42,7 +42,7 @@
                 </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#openMap" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#9678;" styleClass="nav-icon" /></graphic>
-                    <text>Nearby Network</text>
+                    <text>Blood Network</text>
                 </Button>
                 <Button styleClass="nav-button" maxWidth="Infinity" onAction="#showNotifications" contentDisplay="LEFT" graphicTextGap="10">
                     <graphic><Label text="&#128276;" styleClass="nav-icon" /></graphic>

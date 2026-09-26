@@ -9,42 +9,42 @@
         <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
             <Button text="Back" styleClass="btn-secondary" onAction="#goBack" />
             <VBox>
-                <Label text="Nearby network" styleClass="topbar-title" />
-                <Label text="Donors, blood banks, and active requests" styleClass="auth-subtitle" />
+                <Label text="Blood network" styleClass="topbar-title" />
+                <Label text="Find people and services connected to LifeLink" styleClass="auth-subtitle" />
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
             <Button text="Notifications" styleClass="btn-secondary" onAction="#openNotifications" />
             <Button text="Statistics" styleClass="btn-secondary" onAction="#openStatistics" />
-            <Button text="Prototype map" styleClass="btn-primary" />
+            <Button text="Refresh" styleClass="btn-primary" onAction="#refreshDirectory" />
         </HBox>
     </top>
     <center>
-        <HBox styleClass="content-area map-page" spacing="18">
-            <VBox HBox.hgrow="ALWAYS" spacing="10">
-                <VBox styleClass="page-heading" spacing="4">
-                    <Label text="Prototype network map" styleClass="section-heading" />
-                        <Label text="Select a marker to see donors, recipients, blood banks, and active requests." styleClass="muted-text" />
-                </VBox>
-                <StackPane fx:id="mapViewport" VBox.vgrow="ALWAYS" minHeight="500" styleClass="map-shell">
-                    <HBox styleClass="map-controls" alignment="CENTER" spacing="4" StackPane.alignment="TOP_RIGHT">
-                        <Button text="−" styleClass="map-control" onAction="#zoomOut" />
-                        <Label fx:id="zoomLabel" text="100%" styleClass="map-zoom-label" />
-                        <Button text="+" styleClass="map-control" onAction="#zoomIn" />
-                        <Button text="Reset" styleClass="map-reset" onAction="#resetMap" />
-                    </HBox>
-                </StackPane>
+        <VBox styleClass="content-area" spacing="18">
+            <VBox styleClass="page-heading" spacing="4">
+                <Label text="Blood network directory" styleClass="section-heading" />
+                <Label text="Search available donors, recipients, blood banks, and active blood requests from the live database." styleClass="muted-text" wrapText="true" />
             </VBox>
-            <VBox prefWidth="300" spacing="12" styleClass="map-sidebar">
-                <VBox styleClass="card" spacing="8">
-                    <Label text="NETWORK STATUS" styleClass="card-title" />
-                    <Label fx:id="networkSummary" text="Loading locations..." styleClass="card-metric-sub" wrapText="true" />
+            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="directory-toolbar">
+                <TextField fx:id="searchField" promptText="Search name, blood type, location, phone, or status" HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="categoryFilter" prefWidth="150" />
+            </HBox>
+            <SplitPane VBox.vgrow="ALWAYS" dividerPositions="0.72">
+                <ScrollPane fitToWidth="true" styleClass="directory-scroll">
+                    <content>
+                        <VBox fx:id="markerList" spacing="10" styleClass="directory-list" />
+                    </content>
+                </ScrollPane>
+                <VBox prefWidth="270" spacing="14" styleClass="directory-sidebar">
+                    <VBox styleClass="card" spacing="8">
+                        <Label text="NETWORK STATUS" styleClass="card-title" />
+                        <Label fx:id="networkSummary" text="Loading records..." styleClass="card-metric-sub" wrapText="true" />
+                    </VBox>
+                    <VBox styleClass="card" spacing="8" VBox.vgrow="ALWAYS">
+                        <Label text="SELECTED RECORD" styleClass="card-title" />
+                        <Label fx:id="selectedMarkerLabel" text="Select a record for contact and location details." styleClass="muted-text" wrapText="true" />
+                    </VBox>
                 </VBox>
-                <VBox styleClass="card" spacing="6">
-                    <Label text="SELECTED LOCATION" styleClass="card-title" />
-                    <Label fx:id="selectedMarkerLabel" text="Select a map marker for details." styleClass="muted-text" wrapText="true" />
-                </VBox>
-                <VBox fx:id="markerList" styleClass="card" spacing="10" VBox.vgrow="ALWAYS" />
-            </VBox>
-        </HBox>
+            </SplitPane>
+        </VBox>
     </center>
 </BorderPane>

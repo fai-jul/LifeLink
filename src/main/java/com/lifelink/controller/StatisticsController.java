@@ -92,6 +92,6 @@ public class StatisticsController {
 
     @FXML
     public void openMap() {
-        SceneManager.switchTo("map.fxml", "Nearby Network");
+        SceneManager.switchTo("map.fxml", "Blood Network");
     }
 }

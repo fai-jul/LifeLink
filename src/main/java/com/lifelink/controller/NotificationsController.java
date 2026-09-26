@@ -40,5 +40,5 @@ public class NotificationsController {
     }
 
     @FXML public void goBack() { SceneManager.goToDashboard(); }
-    @FXML public void openMap() { SceneManager.switchTo("map.fxml", "Nearby Network"); }
+    @FXML public void openMap() { SceneManager.switchTo("map.fxml", "Blood Network"); }
 }
