@@ -27,6 +27,38 @@ The first run creates `lifelink.db` (SQLite) in the project's working
 directory and initializes the full schema automatically — no manual setup
 needed.
 
+## API integration
+
+The project supports external API-based data syncing for donor and patient
+records.
+
+- Configure the API host with a JVM property:
+
+```bash
+mvn clean javafx:run -Dlifelink.api.base.url=http://localhost:8080/api
+```
+
+- The app expects JSON endpoints at:
+  - `/api/donors`
+  - `/api/patients`
+
+- The sync layer is handled by `ApiClientService`, which reads JSON from the
+  configured API and stores the incoming records in the local tracking database
+  for the blood bank.
+
+## Blood bank tracking database
+
+A dedicated database is included for blood-bank operation tracking:
+
+- `bloodbank_tracking.db`
+- tables:
+  - `blood_bank_donor_records`
+  - `blood_bank_patient_records`
+
+This keeps donor and patient information separate from the main app database and
+makes it easier for a blood bank to manage operational records while still
+using the main LifeLink system for donors, requests, and inventory.
+
 ## What works right now (Phase 1, Phase 2, and Phase 3)
 
 - Editorial splash screen with a restrained blood-mark settle, fade transitions,

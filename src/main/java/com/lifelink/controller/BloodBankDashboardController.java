@@ -1,6 +1,7 @@
 package com.lifelink.controller;
 
 import com.lifelink.SceneManager;
+import com.lifelink.db.BloodBankTrackingRepository;
 import com.lifelink.db.NotificationRepository;
 import com.lifelink.db.BloodRequestRepository;
 import com.lifelink.db.BloodUnitRepository;
@@ -32,6 +33,8 @@ public class BloodBankDashboardController {
     @FXML private Label inventoryMetric;
     @FXML private Label requestsMetric;
     @FXML private Label lowStockMetric;
+    @FXML private Label trackedDonorMetric;
+    @FXML private Label trackedPatientMetric;
     @FXML private Label inventoryEmptyLabel;
     @FXML private PieChart inventoryChart;
     @FXML private Label sidebarAvatarLabel;
@@ -42,6 +45,7 @@ public class BloodBankDashboardController {
     private final NotificationRepository notificationRepository = new NotificationRepository();
     private final BloodUnitRepository bloodUnitRepository = new BloodUnitRepository();
     private final BloodRequestRepository bloodRequestRepository = new BloodRequestRepository();
+    private final BloodBankTrackingRepository trackingRepository = new BloodBankTrackingRepository();
     private BloodBank bloodBank;
 
     @FXML
@@ -67,9 +71,14 @@ public class BloodBankDashboardController {
 
     private void loadMetrics() {
         int total = bloodUnitRepository.totalAvailable(bloodBank.getId());
+        int donorsTracked = trackingRepository.countDonorsForBank(bloodBank.getId());
+        int patientsTracked = trackingRepository.countPatientsForBank(bloodBank.getId());
+
         inventoryMetric.setText(total + " units");
         requestsMetric.setText(String.valueOf(bloodRequestRepository.findActive().size()));
         lowStockMetric.setText(String.valueOf(total < 5 ? 1 : 0));
+        trackedDonorMetric.setText(String.valueOf(donorsTracked));
+        trackedPatientMetric.setText(String.valueOf(patientsTracked));
         inventoryChart.getData().clear();
         for (BloodType type : BloodType.values()) {
             int quantity = bloodUnitRepository.availableForType(bloodBank.getId(), type);

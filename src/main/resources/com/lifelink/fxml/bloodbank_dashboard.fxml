@@ -103,6 +103,25 @@
                 </HBox>
 
                 <HBox spacing="18">
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="&#128104;" styleClass="kpi-badge, kpi-badge-green" />
+                        <Label text="TRACKED DONORS" styleClass="card-title">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="trackedDonorMetric" text="0" styleClass="card-metric" />
+                        <Label text="Donor records attached to this blood bank" styleClass="card-metric-sub" />
+                    </VBox>
+                    <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="10">
+                        <Label text="&#128100;" styleClass="kpi-badge, kpi-badge-red" />
+                        <Label text="TRACKED PATIENTS" styleClass="card-title">
+                            <VBox.margin><Insets top="6" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="trackedPatientMetric" text="0" styleClass="card-metric" />
+                        <Label text="Patient records currently tracked" styleClass="card-metric-sub" />
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="18">
                     <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="10">
                         <Label text="Inventory by Blood Type" styleClass="section-heading" />
                         <PieChart fx:id="inventoryChart" legendSide="RIGHT" prefHeight="250" />
