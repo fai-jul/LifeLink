@@ -3,10 +3,12 @@ package com.lifelink.controller;
 import com.lifelink.SceneManager;
 import com.lifelink.db.ActivityLogRepository;
 import com.lifelink.db.BloodRequestRepository;
+import com.lifelink.db.DonationRepository;
 import com.lifelink.db.NotificationRepository;
 import com.lifelink.db.UserRepository;
 import com.lifelink.model.BloodRequest;
 import com.lifelink.model.BloodType;
+import com.lifelink.model.Donation;
 import com.lifelink.model.Donor;
 import com.lifelink.model.Notification;
 import com.lifelink.service.EligibilityService;
@@ -27,6 +29,8 @@ import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +38,13 @@ public class DonorDashboardController {
 
     private static final DateTimeFormatter TODAY_FORMAT =
             DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy", Locale.ENGLISH);
+    private static final List<String> BANGLADESHI_DONOR_NAMES = List.of(
+            "Rahim Uddin", "Karim Ahmed", "Nasima Akter", "Farhan Hossain",
+            "Shahana Begum", "Jahid Hasan", "Mitu Rahman", "Sabbir Khan",
+            "Taslima Begum", "Mahmudul Islam", "Lamia Sultana", "Nabil Hossain",
+            "Rumana Karim", "Anik Chowdhury", "Shamima Akter", "Hasan Ali",
+            "Faria Islam", "Mizanur Rahman", "Ayesha Siddiqua", "Ibrahim Khalil"
+    );
 
     @FXML private Label welcomeLabel;
     @FXML private Label bloodTypeLabel;
@@ -58,6 +69,7 @@ public class DonorDashboardController {
 
     private final EligibilityService eligibilityService = new EligibilityService();
     private final UserRepository userRepository = new UserRepository();
+    private final DonationRepository donationRepository = new DonationRepository();
     private final NotificationRepository notificationRepository = new NotificationRepository();
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
     private final BloodRequestRepository bloodRequestRepository = new BloodRequestRepository();
@@ -192,16 +204,42 @@ public class DonorDashboardController {
     }
 
     private void loadDashboardInsights() {
+        List<Donor> allDonors = userRepository.findAllDonors(false);
+        loadBloodTypeChart(allDonors);
+        loadDonationTrends(allDonors);
+        loadDonorLists(allDonors);
+        buildCompatibilityGrid();
+    }
+
+    private void loadBloodTypeChart(List<Donor> donors) {
         bloodTypeChart.getData().clear();
-        int[] typeCounts = {18, 11, 14, 7, 5, 3, 24, 8};
-        for (int i = 0; i < BloodType.values().length; i++) {
-            bloodTypeChart.getData().add(new PieChart.Data(BloodType.values()[i].getLabel(), typeCounts[i]));
+        int[] typeCounts = new int[BloodType.values().length];
+
+        if (donors.isEmpty()) {
+            int[] fallback = {10, 7, 12, 6, 4, 3, 15, 8};
+            typeCounts = fallback;
+        } else {
+            for (Donor donor : donors) {
+                if (donor.getBloodType() != null) {
+                    typeCounts[donor.getBloodType().ordinal()]++;
+                }
+            }
         }
+
+        for (int i = 0; i < BloodType.values().length; i++) {
+            if (typeCounts[i] > 0) {
+                bloodTypeChart.getData().add(new PieChart.Data(BloodType.values()[i].getLabel(), typeCounts[i]));
+            }
+        }
+    }
+
+    private void loadDonationTrends(List<Donor> donors) {
+        String[] months = {"Apr", "May", "Jun", "Jul", "Aug", "Sep"};
+        int[] monthlyDonations = calculateMonthlyDonationCounts(donors, months.length);
 
         donationBarChart.getData().clear();
         XYChart.Series<String, Number> donations = new XYChart.Series<>();
-        int[] monthlyDonations = {12, 18, 15, 24, 21, 29};
-        String[] months = {"Apr", "May", "Jun", "Jul", "Aug", "Sep"};
+        donations.setName("Monthly donations");
         for (int i = 0; i < months.length; i++) {
             donations.getData().add(new XYChart.Data<>(months[i], monthlyDonations[i]));
         }
@@ -209,21 +247,68 @@ public class DonorDashboardController {
 
         growthLineChart.getData().clear();
         XYChart.Series<String, Number> growth = new XYChart.Series<>();
-        int[] donorGrowth = {42, 49, 57, 66, 78, 90};
+        growth.setName("Network growth");
+        int runningTotal = 0;
         for (int i = 0; i < months.length; i++) {
-            growth.getData().add(new XYChart.Data<>(months[i], donorGrowth[i]));
+            runningTotal += Math.max(4, monthlyDonations[i]);
+            growth.getData().add(new XYChart.Data<>(months[i], runningTotal));
         }
         growthLineChart.getData().add(growth);
+    }
 
+    private int[] calculateMonthlyDonationCounts(List<Donor> donors, int monthCount) {
+        int[] monthlyDonations = new int[monthCount];
+        List<Donation> allDonations = new ArrayList<>();
+
+        for (Donor donor : donors) {
+            allDonations.addAll(donationRepository.findForDonor(donor.getId()));
+        }
+
+        if (allDonations.isEmpty()) {
+            int donorBase = donors.isEmpty() ? 18 : Math.max(6, donors.size());
+            for (int i = 0; i < monthCount; i++) {
+                monthlyDonations[i] = donorBase / 2 + i + 4;
+            }
+            return monthlyDonations;
+        }
+
+        for (Donation donation : allDonations) {
+            if (donation.getDonationDate() == null) continue;
+            int monthIndex = Math.min(monthCount - 1, Math.max(0, 5 - donation.getDonationDate().getMonth().getValue() % 6));
+            monthlyDonations[monthIndex] += donation.getQuantity();
+        }
+        return monthlyDonations;
+    }
+
+    private void loadDonorLists(List<Donor> donors) {
+        List<String> names = donors.stream().map(Donor::getName).filter(name -> name != null && !name.isBlank()).toList();
         donorListBox.getChildren().setAll(
-                donorRow("Maya Thompson", "O+", "2.4 km away", "Available today"),
-                donorRow("Jordan Lee", "A-", "4.1 km away", "Available tomorrow"),
-                donorRow("Samira Patel", "B+", "5.8 km away", "Available today"));
+                donorRow(getNameAt(names, 0, "Rahim Uddin"), getBloodTypeAt(donors, 0, BloodType.O_POS), formatDistance(2.4), "Available today"),
+                donorRow(getNameAt(names, 1, "Karim Ahmed"), getBloodTypeAt(donors, 1, BloodType.A_NEG), formatDistance(4.1), "Available tomorrow"),
+                donorRow(getNameAt(names, 2, "Nasima Akter"), getBloodTypeAt(donors, 2, BloodType.B_POS), formatDistance(5.8), "Available today"));
+
         previousDonorsBox.getChildren().setAll(
-                donorRow("Alex Morgan", "O-", "Last donation: 12 Sep 2026", "8 donations"),
-                donorRow("Priya Shah", "AB+", "Last donation: 28 Aug 2026", "5 donations"),
-                donorRow("Daniel Kim", "A+", "Last donation: 04 Aug 2026", "11 donations"));
-        buildCompatibilityGrid();
+                donorRow(getNameAt(names, 3, "Farhan Hossain"), getBloodTypeAt(donors, 3, BloodType.O_NEG), "Last donation: 12 Sep 2026", "8 donations"),
+                donorRow(getNameAt(names, 4, "Shahana Begum"), getBloodTypeAt(donors, 4, BloodType.AB_POS), "Last donation: 28 Aug 2026", "5 donations"),
+                donorRow(getNameAt(names, 5, "Jahid Hasan"), getBloodTypeAt(donors, 5, BloodType.A_POS), "Last donation: 04 Aug 2026", "11 donations"));
+    }
+
+    private String getNameAt(List<String> names, int index, String fallback) {
+        if (index < names.size() && !names.get(index).isBlank()) {
+            return names.get(index);
+        }
+        return fallback;
+    }
+
+    private String getBloodTypeAt(List<Donor> donors, int index, BloodType fallback) {
+        if (index < donors.size() && donors.get(index).getBloodType() != null) {
+            return donors.get(index).getBloodType().getLabel();
+        }
+        return fallback.getLabel();
+    }
+
+    private String formatDistance(double kilometers) {
+        return String.format(Locale.US, "%.1f km away", kilometers);
     }
 
     private HBox donorRow(String name, String bloodType, String detail, String status) {

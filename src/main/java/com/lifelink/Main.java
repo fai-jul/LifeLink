@@ -29,9 +29,10 @@ public class Main extends Application {
         eligibilityMonitor.start();
 
         SceneManager.init(primaryStage);
+        primaryStage.setTitle("LifeLink");
         primaryStage.setMinWidth(1024);
         primaryStage.setMinHeight(680);
-        SceneManager.switchTo("splash.fxml", "Welcome");
+        SceneManager.switchTo("splash.fxml", null);
         primaryStage.show();
     }
 

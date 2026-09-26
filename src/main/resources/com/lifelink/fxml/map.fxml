@@ -22,8 +22,8 @@
         <HBox styleClass="content-area map-page" spacing="18">
             <VBox HBox.hgrow="ALWAYS" spacing="10">
                 <VBox styleClass="page-heading" spacing="4">
-                    <Label text="Live network map" styleClass="section-heading" />
-                    <Label text="Select a marker to see who needs blood and who is ready to donate." styleClass="muted-text" />
+                    <Label text="Prototype network map" styleClass="section-heading" />
+                        <Label text="Select a marker to see donors, recipients, blood banks, and active requests." styleClass="muted-text" />
                 </VBox>
                 <StackPane fx:id="mapViewport" VBox.vgrow="ALWAYS" minHeight="500" styleClass="map-shell">
                     <HBox styleClass="map-controls" alignment="CENTER" spacing="4" StackPane.alignment="TOP_RIGHT">

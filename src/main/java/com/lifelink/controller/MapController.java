@@ -7,6 +7,7 @@ import com.lifelink.model.BloodBank;
 import com.lifelink.model.BloodRequest;
 import com.lifelink.model.Donor;
 import com.lifelink.model.Recipient;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -17,8 +18,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MapController {
     @FXML private VBox markerList;
@@ -33,12 +36,39 @@ public class MapController {
     private List<MapMarker> currentMarkers = List.of();
     private double zoom = 1;
 
+    // Fixed seed so the prototype city layout (roads/buildings/trees) stays
+    // stable across re-renders/resizes instead of reshuffling every frame.
+    private static final long BACKDROP_SEED = 42L;
+
     @FXML
     public void initialize() {
         mapLayer.getStyleClass().add("map-layer");
         mapLayer.setMinSize(0, 0);
         mapLayer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        // BUG FIX: mapLayer was a *managed* child of the StackPane. A StackPane
+        // resizes/repositions every managed child itself on each automatic
+        // layout pass, which fights with the manual resizeRelocate() calls in
+        // renderMap() below and can leave the layer at a stale/zero size (it
+        // renders once at 0x0 before the first real layout pass runs, and
+        // depending on layout timing may never get corrected afterwards).
+        // Marking it unmanaged means only OUR code controls its size/position,
+        // so the manual layout in renderMap() is authoritative and reliable.
+        mapLayer.setManaged(false);
+
         mapViewport.getChildren().add(0, mapLayer);
+
+        // BUG FIX: StackPane (and JavaFX Regions in general) do NOT clip their
+        // children to their own bounds. When zoom > 100% scales mapLayer up,
+        // the enlarged content was painting straight over the sidebar cards
+        // and even the topbar instead of being cropped to the map panel.
+        // Clipping mapViewport to its own size fixes that — the clip stays in
+        // sync automatically via the width/height bindings below.
+        Rectangle viewportClip = new Rectangle();
+        viewportClip.widthProperty().bind(mapViewport.widthProperty());
+        viewportClip.heightProperty().bind(mapViewport.heightProperty());
+        mapViewport.setClip(viewportClip);
+
         try {
             loadMarkers();
         } catch (RuntimeException exception) {
@@ -52,7 +82,17 @@ public class MapController {
         }
         mapViewport.widthProperty().addListener((obs, oldValue, newValue) -> renderMap());
         mapViewport.heightProperty().addListener((obs, oldValue, newValue) -> renderMap());
+
+        // BUG FIX: at initialize() time the scene hasn't been laid out yet, so
+        // mapViewport.getWidth()/getHeight() are still 0 and this first call
+        // draws an empty/invisible frame. The width/height listeners above are
+        // supposed to trigger the real redraw once layout happens, but on some
+        // platforms/timings that first pass can race with FXML/CSS application
+        // and get missed. Platform.runLater() guarantees one extra render pass
+        // after the initial layout has definitely completed, so the map is
+        // never left blank.
         renderMap();
+        Platform.runLater(this::renderMap);
     }
 
     @FXML public void goBack() { SceneManager.goToDashboard(); }
@@ -123,17 +163,25 @@ public class MapController {
         if (mapViewport == null) return;
         double width = Math.max(0, mapViewport.getWidth());
         double height = Math.max(0, mapViewport.getHeight());
+        if (width <= 0 || height <= 0) {
+            // Nothing usable to lay out yet (pre-layout pass) — the
+            // Platform.runLater()/property-listener calls will retry once the
+            // viewport actually has a size, so just bail out instead of
+            // drawing a degenerate 0x0 frame.
+            return;
+        }
         mapLayer.setPrefSize(width, height);
         mapLayer.resizeRelocate(0, 0, width, height);
         mapLayer.getChildren().clear();
 
-        Label title = new Label("NETWORK MAP");
+        Label title = new Label("NETWORK MAP — PROTOTYPE CITY VIEW");
         title.getStyleClass().add("map-backdrop-label");
         title.setLayoutX(22);
         title.setLayoutY(20);
         mapLayer.getChildren().add(title);
 
-        addMapGrid(width, height);
+        addCityBackdrop(width, height);
+
         List<MapMarker> plotted = currentMarkers.stream()
                 .filter(marker -> hasCoordinates(marker.latitude(), marker.longitude())).toList();
         if (plotted.isEmpty()) {
@@ -164,22 +212,119 @@ public class MapController {
         }
     }
 
-    private void addMapGrid(double width, double height) {
-        for (int i = 1; i < 6; i++) {
-            Label vertical = new Label();
-            vertical.getStyleClass().add("map-grid-line-vertical");
-            vertical.setLayoutX(width * i / 6);
-            vertical.setLayoutY(42);
-            vertical.setPrefHeight(Math.max(0, height - 84));
-            mapLayer.getChildren().add(vertical);
+    /**
+     * Draws a lightweight "prototype city" backdrop — a grid of streets with
+     * blocks that each randomly get a building, a small tree cluster, or are
+     * left as an open lot. It's deliberately flat 2D (rectangles + a
+     * lighter/darker strip per building for a cheap beveled "3D block" look)
+     * rather than a real JavaFX 3D scene (Box/SubScene/PerspectiveCamera):
+     * that keeps it fast, dependency-free, and trivial to theme via CSS,
+     * which is what a prototype map needs. Donor/recipient/blood-bank/request
+     * pins are drawn afterwards in renderMap(), on top of this layer.
+     */
+    private void addCityBackdrop(double width, double height) {
+        double margin = 46; // keep clear of the "NETWORK MAP" label and edges
+        double usableWidth = width - margin * 2;
+        double usableHeight = height - margin * 2 - 20;
+        if (usableWidth < 80 || usableHeight < 80) return;
 
-            Label horizontal = new Label();
-            horizontal.getStyleClass().add("map-grid-line-horizontal");
-            horizontal.setLayoutX(30);
-            horizontal.setLayoutY(height * i / 6);
-            horizontal.setPrefWidth(Math.max(0, width - 60));
-            mapLayer.getChildren().add(horizontal);
+        int columns = Math.max(2, Math.min(8, (int) (usableWidth / 130)));
+        int rows = Math.max(2, Math.min(6, (int) (usableHeight / 120)));
+        double cellWidth = usableWidth / columns;
+        double cellHeight = usableHeight / rows;
+        double top = margin + 20;
+
+        Random random = new Random(BACKDROP_SEED);
+
+        double roadWidth = 10;
+        Color asphalt = Color.web("#4a5560");
+        for (int c = 0; c <= columns; c++) {
+            Rectangle road = new Rectangle(roadWidth, usableHeight, asphalt);
+            road.setLayoutX(margin + c * cellWidth - roadWidth / 2);
+            road.setLayoutY(top);
+            road.getStyleClass().add("map-road");
+            mapLayer.getChildren().add(road);
         }
+        for (int r = 0; r <= rows; r++) {
+            Rectangle road = new Rectangle(usableWidth, roadWidth, asphalt);
+            road.setLayoutX(margin);
+            road.setLayoutY(top + r * cellHeight - roadWidth / 2);
+            road.getStyleClass().add("map-road");
+            mapLayer.getChildren().add(road);
+        }
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                double blockX = margin + c * cellWidth;
+                double blockY = top + r * cellHeight;
+                double roll = random.nextDouble();
+                if (roll < 0.55) {
+                    addBuilding(blockX, blockY, cellWidth, cellHeight, random);
+                } else if (roll < 0.82) {
+                    addTreeCluster(blockX, blockY, cellWidth, cellHeight, random);
+                }
+                // else: leave the block as open ground for visual breathing room
+            }
+        }
+    }
+
+    private void addBuilding(double blockX, double blockY, double blockW, double blockH, Random random) {
+        double pad = Math.min(blockW, blockH) * 0.22;
+        double bw = Math.max(16, blockW - pad * 2);
+        double bh = Math.max(16, blockH - pad * 2);
+        double bx = blockX + (blockW - bw) / 2;
+        double by = blockY + (blockH - bh) / 2;
+
+        Color[] palette = {
+                Color.web("#b48a5a"), Color.web("#8f9fae"), Color.web("#a6693f"),
+                Color.web("#5f7d8c"), Color.web("#7c8f6d"), Color.web("#9c7a8f")
+        };
+        Color wall = palette[random.nextInt(palette.length)];
+
+        Rectangle body = new Rectangle(bw, bh, wall);
+        body.setLayoutX(bx);
+        body.setLayoutY(by);
+        body.getStyleClass().add("map-building");
+
+        // Lighter strip along the top and a darker strip along the right edge
+        // give a cheap beveled/"3D block" read without real 3D geometry.
+        Rectangle roof = new Rectangle(bw, Math.max(5, bh * 0.16), wall.deriveColor(0, 1, 1.35, 1));
+        roof.setLayoutX(bx);
+        roof.setLayoutY(by);
+        roof.getStyleClass().add("map-building-roof");
+
+        double shadeWidth = Math.max(4, bw * 0.18);
+        Rectangle shade = new Rectangle(shadeWidth, bh, wall.deriveColor(0, 1, 0.55, 1));
+        shade.setLayoutX(bx + bw - shadeWidth);
+        shade.setLayoutY(by);
+        shade.getStyleClass().add("map-building-shade");
+
+        mapLayer.getChildren().addAll(body, roof, shade);
+    }
+
+    private void addTreeCluster(double blockX, double blockY, double blockW, double blockH, Random random) {
+        int count = 1 + random.nextInt(3);
+        for (int i = 0; i < count; i++) {
+            double tx = blockX + 14 + random.nextDouble() * Math.max(1, blockW - 28);
+            double ty = blockY + 14 + random.nextDouble() * Math.max(1, blockH - 28);
+            addTree(tx, ty, random);
+        }
+    }
+
+    private void addTree(double x, double y, Random random) {
+        double trunkHeight = 6 + random.nextDouble() * 3;
+        Rectangle trunk = new Rectangle(3, trunkHeight, Color.web("#8a6a4a"));
+        trunk.setLayoutX(x - 1.5);
+        trunk.setLayoutY(y);
+        trunk.getStyleClass().add("map-tree-trunk");
+
+        double radius = 6 + random.nextDouble() * 4;
+        Circle foliage = new Circle(radius, Color.web("#4f8f5f"));
+        foliage.setLayoutX(x);
+        foliage.setLayoutY(y - radius * 0.6);
+        foliage.getStyleClass().add("map-tree-foliage");
+
+        mapLayer.getChildren().addAll(trunk, foliage);
     }
 
     private void addMapMarker(MapMarker marker, double x, double y) {

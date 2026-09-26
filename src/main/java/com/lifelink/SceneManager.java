@@ -2,6 +2,7 @@ package com.lifelink;
 
 import com.lifelink.model.User;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.paint.Color;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,6 +26,8 @@ public final class SceneManager {
 
     public static void init(Stage stage) {
         primaryStage = stage;
+        // Keep JavaFX's fullscreen exit shortcut without displaying its native hint.
+        primaryStage.setFullScreenExitHint("");
     }
 
     public static Stage getStage() {
@@ -50,9 +53,19 @@ public final class SceneManager {
             Parent root = loader.load();
             Scene scene = new Scene(root, 1180, 760);
             scene.getStylesheets().add(SceneManager.class.getResource("/com/lifelink/css/app.css").toExternalForm());
+            if ("splash.fxml".equals(fxmlFileName)) {
+                scene.setFill(Color.web("#081b2d"));
+            }
+
+            boolean wasMaximized = primaryStage.isMaximized();
             primaryStage.setScene(scene);
             primaryStage.setTitle("LifeLink" + (title != null ? " - " + title : ""));
-            primaryStage.centerOnScreen();
+            if (!primaryStage.isFullScreen() && !wasMaximized) {
+                primaryStage.centerOnScreen();
+            }
+            if (wasMaximized) {
+                primaryStage.setMaximized(true);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Failed to load screen: " + fxmlFileName, e);
         } catch (RuntimeException e) {

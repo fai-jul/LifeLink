@@ -431,10 +431,10 @@
 }
 .map-shell .map-pin:hover { -fx-scale-x: 1.15; -fx-scale-y: 1.15; }
 .map-layer {
-    -fx-background-color: linear-gradient(to bottom right, #e8f2ef, #d7e8e5);
+    -fx-background-color: linear-gradient(to bottom right, #d7e8de, #b9d4c6);
     -fx-background-radius: 14;
     -fx-border-radius: 14;
-    -fx-border-color: #c6d8d4;
+    -fx-border-color: #a9c4b8;
 }
 .map-grid-line-vertical, .map-grid-line-horizontal {
     -fx-background-color: rgba(255,255,255,0.6);
@@ -485,6 +485,26 @@
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-letter-spacing: 1px;
+}
+.map-road {
+    -fx-arc-width: 0;
+    -fx-arc-height: 0;
+    -fx-stroke: rgba(255,255,255,0.55);
+    -fx-stroke-width: 1;
+    -fx-stroke-dash-array: 4 5;
+}
+.map-building {
+    -fx-stroke: rgba(23,37,43,0.35);
+    -fx-stroke-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(23,37,43,0.3), 6, 0.18, 1, 3);
+}
+.map-building-roof { -fx-stroke: rgba(255,255,255,0.35); -fx-stroke-width: 0.5; }
+.map-building-shade { -fx-opacity: 0.85; }
+.map-tree-trunk { -fx-arc-width: 1; -fx-arc-height: 1; }
+.map-tree-foliage {
+    -fx-stroke: rgba(23,37,43,0.15);
+    -fx-stroke-width: 0.75;
+    -fx-effect: dropshadow(gaussian, rgba(23,37,43,0.18), 3, 0.1, 0, 1);
 }
 .notification-row {
     -fx-background-color: #f1f5f5;

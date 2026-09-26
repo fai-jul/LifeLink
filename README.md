@@ -43,7 +43,7 @@ needed.
 - Concurrent compatibility, eligibility, and distance-based donor matching
 - Notifications generated for emergency requests, donor matches, inventory, and expiry events
 - Full activity log screens for every account role
-- Nearby network screen with saved-coordinate markers and an OpenStreetMap browser handoff
+- Nearby network screen with saved-coordinate markers in an offline prototype map
 - Nominatim location lookup with timeout-safe offline fallback
 - Real blood-bank network statistics, donor blood-type chart, and live summary counters
 - Confirmation dialogs for request cancellation and other critical actions

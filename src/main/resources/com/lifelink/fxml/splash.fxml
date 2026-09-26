@@ -18,7 +18,7 @@
             </ImageView>
         </StackPane>
 
-        <Label fx:id="titleLabel" text="LIFELINK" styleClass="splash-title" opacity="0" />
+        <Label fx:id="titleLabel" text="LIFELINK" styleClass="splash-title" opacity="100" />
         <Label fx:id="taglineLabel" text="Connecting People. Saving Lives." styleClass="splash-tagline" opacity="0" />
         <Label fx:id="hintLabel" text="Press Any Key to Continue" styleClass="splash-hint" opacity="0" />
     </VBox>
