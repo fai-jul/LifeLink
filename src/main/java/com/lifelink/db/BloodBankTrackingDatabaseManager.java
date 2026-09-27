@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -37,7 +36,8 @@ public final class BloodBankTrackingDatabaseManager {
             try {
                 connection = DriverManager.getConnection(URL);
                 try (Statement pragma = connection.createStatement()) {
-                    pragma.execute("PRAGMA foreign_keys = ON;");
+                    // API tracking records live in a separate database from users.
+                    pragma.execute("PRAGMA foreign_keys = OFF;");
                 }
                 initSchema();
             } catch (SQLException e) {

@@ -33,7 +33,7 @@
 .splash-title {
     -fx-font-size: 48px;
     -fx-font-weight: bold;
-    -fx-text-fill: #f2fbff;
+    -fx-text-fill: #000000;
     -fx-letter-spacing: 3px;
 }
 .splash-tagline {

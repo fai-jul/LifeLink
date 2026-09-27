@@ -2,6 +2,7 @@ package com.lifelink;
 
 import com.lifelink.db.ActivityLogRepository;
 import com.lifelink.db.DatabaseManager;
+import com.lifelink.db.DemoDataSeeder;
 import com.lifelink.db.NotificationRepository;
 import com.lifelink.db.UserRepository;
 import com.lifelink.service.EligibilityReminderMonitor;
@@ -20,6 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Touch the DB layer on startup so schema creation happens before any UI needs it.
         DatabaseManager.getConnection();
+        DemoDataSeeder.seed();
         expiryMonitor = new InventoryExpiryMonitor(new InventoryService(), null);
         expiryMonitor.start();
 
