@@ -799,7 +799,8 @@
 .list-row-title { -fx-font-size: 14px; }
 .list-row-meta { -fx-font-size: 12px; }
 
-/* Request triage queue position badge */
+/* Request triage queue position badge
+    some mofication done here*/
 .queue-position {
     -fx-min-width: 30; -fx-min-height: 30;
     -fx-max-width: 30; -fx-max-height: 30;
